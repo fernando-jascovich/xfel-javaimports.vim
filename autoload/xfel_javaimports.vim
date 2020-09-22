@@ -1,13 +1,22 @@
-function! s:init()
-  let s:cache = {}
+let s:fname = $HOME . "/.cache/nvim/xfel-javaimports/cache.json"
+
+function! xfel_javaimports#init()
+  try
+    let s:cache = json_decode(readfile(s:fname))
+  catch
+    let s:cache = {}
+  endtry
 endfunction
 
 function! s:save()
-  let l:fname = "/home/xfel/Desktop/xfel-javaimports-cache.json"
-  call writefile([json_encode(s:cache)], l:fname)
+  if !filewritable(s:fname)
+    call mkdir(fnamemodify(s:fname, ":p:h"), "p")
+  end
+
+  call writefile([json_encode(s:cache)], s:fname)
 endfunction
 
-function! s:read(override)
+function! xfel_javaimports#read(override)
   let l:clazz = expand('<cword>')
   if a:override || !has_key(s:cache, l:clazz)
     let l:clazz = input('Class: ', l:clazz)
@@ -18,12 +27,12 @@ function! s:read(override)
   return get(s:cache, l:clazz)
 endfunction
 
-function! s:insert(import)
+function! xfel_javaimports#insert(import)
   let l:currentpos = getpos('.')
   call cursor(0, 0)
   let l:pkgline = search('package')
-  let l:import = l:pkgline + 1, 'import ' . a:import
-  call append(l:import)
+  let l:import = 'import ' . a:import
+  call append(l:pkgline + 1, l:import)
   call cursor(l:currentpos[1] + 1, l:currentpos[2])
 endfunction
 
