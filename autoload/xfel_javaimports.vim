@@ -27,11 +27,24 @@ function! xfel_javaimports#read(override)
   return get(s:cache, l:clazz)
 endfunction
 
+function! s:importline(import)
+  let l:import = 'import ' . a:import
+  if ft == "java"
+    let l:import = l:import . ';'
+  endif
+  return l:import
+endfunction
+
+function! xfel_javaimports#commonft()
+  let l:commonfts = ["java", "kotlin"]
+  return index(l:commonfts, &ft) > -1
+endfunction
+
 function! xfel_javaimports#insert(import)
   let l:currentpos = getpos('.')
   call cursor(0, 0)
   let l:pkgline = search('package')
-  let l:import = 'import ' . a:import
+  let l:import = s:importline(import)
   call append(l:pkgline + 1, l:import)
   call cursor(l:currentpos[1] + 1, l:currentpos[2])
 endfunction

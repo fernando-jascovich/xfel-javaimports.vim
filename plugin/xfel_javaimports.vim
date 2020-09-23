@@ -4,6 +4,13 @@ endif
 let g:loaded_xfel_javaimports_plugin = 1
 
 function! xfel_javaimports#import(override)
+  if !xfel_javaimports#commonft()
+    let l:msg = 'This is not a regular file type for this, sure wanna do this? '
+    if confirm(l:msg) != 1
+      return
+    endif
+  endif
+
   if !exists('s:cache')
     call xfel_javaimports#init()
   end
