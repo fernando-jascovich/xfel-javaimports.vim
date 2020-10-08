@@ -21,8 +21,13 @@ function! xfel_javaimports#read(override)
   if a:override || !has_key(s:cache, l:clazz)
     let l:clazz = input('Class: ', l:clazz)
     let l:pkg = input('Package: ')
-    let s:cache[l:clazz] = l:pkg . '.' . l:clazz
-    call s:save()
+
+    if len(l:clazz) > 0 && len(l:pkg) > 0
+      let s:cache[l:clazz] = l:pkg . '.' . l:clazz
+      call s:save()
+    else
+      return ""
+    end
   end
   return get(s:cache, l:clazz)
 endfunction
@@ -45,6 +50,11 @@ function! s:already_imported(importline)
 endfunction
 
 function! xfel_javaimports#insert(import)
+  if len(a:import) < 1
+    echom 'Nothing to import'
+    return
+  end
+
   let l:import = s:importline(a:import)
   if s:already_imported(l:import)
     echom 'Already imported: ' . a:import

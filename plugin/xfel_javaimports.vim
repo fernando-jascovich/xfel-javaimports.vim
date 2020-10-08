@@ -16,7 +16,9 @@ function! xfel_javaimports#import(override)
   end
 
   let l:result = xfel_javaimports#read(a:override)
-  call xfel_javaimports#insert(l:result)
+  if len(l:result) > 0
+    call xfel_javaimports#insert(l:result)
+  end
 endfunction
 
 command! XFELJI call xfel_javaimports#import(0)
