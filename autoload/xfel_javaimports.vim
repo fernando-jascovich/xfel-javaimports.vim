@@ -63,9 +63,10 @@ function! xfel_javaimports#insert(import)
 
   let l:currentpos = getpos('.')
   call cursor(0, 0)
-  let l:pkgline = search('package', 'n')
+  let l:pkgline = search('^package', 'n')
   call append(l:pkgline + 1, l:import)
   call cursor(l:currentpos[1] + 1, l:currentpos[2])
 endfunction
+
 
 
