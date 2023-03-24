@@ -64,7 +64,12 @@ function! xfel_javaimports#insert(import)
   let l:currentpos = getpos('.')
   call cursor(0, 0)
   let l:pkgline = search('^package', 'n')
+  if l:pkgline < 1
+    let l:pkgline = -1
+  endif
   call append(l:pkgline + 1, l:import)
+  call cursor(l:pkgline + 2, 0)
+  execute "norm! vip:sort\<cr>"
   call cursor(l:currentpos[1] + 1, l:currentpos[2])
 endfunction
 
